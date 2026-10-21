@@ -1,3 +1,4 @@
+
 package com.example.meteolocal
 
 import android.os.Bundle
@@ -6,13 +7,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,6 +47,14 @@ fun MeteoLocalApp() {
 
     var localidad by remember {
         mutableStateOf("")
+    }
+
+    var mensaje by remember {
+        mutableStateOf("Introduce una localidad")
+    }
+
+    var unidad by remember {
+        mutableStateOf("°C")
     }
 
     Column(
@@ -76,17 +89,76 @@ fun MeteoLocalApp() {
             label = {
                 Text("Localidad")
             },
-            singleLine = true
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(
             modifier = Modifier.height(16.dp)
         )
 
-        Button(
-            onClick = { }
+        Text(
+            text = "Unidad de temperatura"
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Consultar")
+            RadioButton(
+                selected = unidad == "°C",
+                onClick = {
+                    unidad = "°C"
+                }
+            )
+
+            Text("°C")
+
+            Spacer(
+                modifier = Modifier.width(16.dp)
+            )
+
+            RadioButton(
+                selected = unidad == "°F",
+                onClick = {
+                    unidad = "°F"
+                }
+            )
+
+            Text("°F")
+        }
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = {
+                    if (localidad.isBlank()) {
+                        mensaje = "Introduce una localidad"
+                    } else {
+                        mensaje =
+                            "Consulta preparada para: $localidad (unidad: $unidad)"
+                    }
+                }
+            ) {
+                Text("Consultar")
+            }
+
+            Spacer(
+                modifier = Modifier.width(12.dp)
+            )
+
+            Button(
+                onClick = {
+                    localidad = ""
+                    mensaje = "Introduce una localidad"
+                }
+            ) {
+                Text("Limpiar")
+            }
         }
 
         Spacer(
@@ -94,7 +166,7 @@ fun MeteoLocalApp() {
         )
 
         Text(
-            text = "Aquí aparecerá la información meteorológica."
+            text = mensaje
         )
     }
 }
